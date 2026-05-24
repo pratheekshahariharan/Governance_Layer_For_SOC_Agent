@@ -26,8 +26,7 @@ think → propose action → [LLM INPUT VALIDATION]
 ---
 
 ## Demo Scenario — Cybersecurity Incident Response
-https://drive.google.com/file/d/1aa_ibiv0YlXBj3YMiDCxTGpFJBxA-A8c/view?usp=drivesdk<img width="1920" height="1080" alt="Screenshot (1413)" src="https://github.com/user-attachments/assets/cae35c1c-08d5-4567-82b9-6dcd324d38a7" />
-
+[Watch Demo Video](https://github.com/pratheekshahariharan/Governance_Layer_For_SOC_Agent/releases/download/v1.0/Cybersecurity_SOC.mp4)
 The prototype is built around a **Cybersecurity IR Agent** that responds to live incidents. It demonstrates all three governance outcomes in a single realistic scenario:
 
 | Action                 | Policy Decision  | Why                                                  |
@@ -220,6 +219,7 @@ The `notifySOCTeam` tool sends **HTML-formatted incident alerts** to the SOC tea
 -   Delivery logged to audit trail
 
 File: `packages/components/nodes/tools/CyberSecIR/NotifySOCTeam.ts`
+<img width="1920" height="1080" alt="Screenshot (1413)" src="https://github.com/user-attachments/assets/bae2673b-a65b-4d4b-bcc1-530beee36223" />
 
 ---
 
