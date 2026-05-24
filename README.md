@@ -26,8 +26,7 @@ think → propose action → [LLM INPUT VALIDATION]
 ---
 
 ## Demo Scenario — Cybersecurity Incident Response
-[Watch Demo Video](https://github.com/pratheekshahariharan/Governance_Layer_For_SOC_Agent/releases/download/v1.0/Cybersecurity_SOC.mp4)
-The prototype is built around a **Cybersecurity IR Agent** that responds to live incidents. It demonstrates all three governance outcomes in a single realistic scenario:
+[Watch Demo Video](https://drive.google.com/file/d/1aa_ibiv0YlXBj3YMiDCxTGpFJBxA-A8c/view?usp=drivesdk)The prototype is built around a **Cybersecurity IR Agent** that responds to live incidents. It demonstrates all three governance outcomes in a single realistic scenario:
 
 | Action                 | Policy Decision  | Why                                                  |
 | ---------------------- | ---------------- | ---------------------------------------------------- |
