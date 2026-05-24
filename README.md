@@ -29,6 +29,8 @@ think → propose action → [LLM INPUT VALIDATION]
 
 ## Demo Video
 [Watch Demo Video](https://drive.google.com/file/d/1aa_ibiv0YlXBj3YMiDCxTGpFJBxA-A8c/view?usp=drivesdk)
+
+---
 The prototype is built around a **Cybersecurity IR Agent** that responds to live incidents. It demonstrates all three governance outcomes in a single realistic scenario:
 
 | Action                 | Policy Decision  | Why                                                  |
