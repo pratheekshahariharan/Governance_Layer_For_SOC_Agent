@@ -29,6 +29,8 @@ import { AgentExecutor, ToolCallingAgentOutputParser } from '../../../src/agents
 import { Moderation, checkInputs, streamResponse } from '../../moderation/Moderation'
 import { formatResponse } from '../../outputparsers/OutputParserHelpers'
 import { addImagesToMessages, llmSupportsVision } from '../../../src/multiModalUtils'
+import { validateWithLLM } from '../../../src/llmJudge'
+import { appendAgentAuditEntry } from '../../../src/auditLog'
 
 class ToolAgent_Agents implements INode {
     label: string
@@ -37,6 +39,7 @@ class ToolAgent_Agents implements INode {
     description: string
     type: string
     icon: string
+    badge: string
     category: string
     baseClasses: string[]
     inputs: INodeParams[]
@@ -49,6 +52,7 @@ class ToolAgent_Agents implements INode {
         this.type = 'AgentExecutor'
         this.category = 'Agents'
         this.icon = 'toolAgent.png'
+        this.badge = 'GOVERNANCE'
         this.description = `Agent that uses Function Calling to pick the tools and args to call`
         this.baseClasses = [this.type, ...getBaseClasses(AgentExecutor)]
         this.inputs = [
@@ -110,6 +114,45 @@ class ToolAgent_Agents implements INode {
                 description: 'Stream detailed intermediate steps during agent execution',
                 optional: true,
                 additionalParams: true
+            },
+            {
+                label: 'Enable LLM Validation',
+                name: 'validationEnabled',
+                type: 'boolean',
+                default: false,
+                description: 'Validate agent input and output using an LLM-as-judge before and after execution',
+                optional: true,
+                additionalParams: true
+            },
+            {
+                label: 'Validation Judge Model',
+                name: 'validationModel',
+                type: 'BaseChatModel',
+                description: 'The LLM used as a judge to validate inputs and outputs',
+                optional: true,
+                additionalParams: true
+            },
+            {
+                label: 'Input Validation Criteria',
+                name: 'inputValidationCriteria',
+                type: 'string',
+                rows: 3,
+                default:
+                    'Must be a valid cybersecurity incident alert containing a specific threat, affected host or IP, and severity level.',
+                description: 'Criteria the agent input must satisfy. Checked by the judge LLM before the agent runs.',
+                optional: true,
+                additionalParams: true
+            },
+            {
+                label: 'Output Validation Criteria',
+                name: 'outputValidationCriteria',
+                type: 'string',
+                rows: 3,
+                default:
+                    'Response must not expose raw credentials, private keys, or internal hostnames. Must include a clear recommended action.',
+                description: 'Criteria the agent output must satisfy. Checked by the judge LLM after the agent finishes.',
+                optional: true,
+                additionalParams: true
             }
         ]
         this.sessionId = fields?.sessionId
@@ -123,6 +166,10 @@ class ToolAgent_Agents implements INode {
         const memory = nodeData.inputs?.memory as FlowiseMemory
         const moderations = nodeData.inputs?.inputModeration as Moderation[]
         const enableDetailedStreaming = nodeData.inputs?.enableDetailedStreaming as boolean
+        const validationEnabled = nodeData.inputs?.validationEnabled as boolean
+        const validationModel = nodeData.inputs?.validationModel as BaseChatModel | undefined
+        const inputValidationCriteria = (nodeData.inputs?.inputValidationCriteria as string) || ''
+        const outputValidationCriteria = (nodeData.inputs?.outputValidationCriteria as string) || ''
 
         const shouldStreamResponse = options.shouldStreamResponse
         const sseStreamer: IServerSideEventStreamer = options.sseStreamer as IServerSideEventStreamer
@@ -141,7 +188,30 @@ class ToolAgent_Agents implements INode {
             }
         }
 
-        const executor = await prepareAgent(nodeData, options, { sessionId: this.sessionId, chatId: options.chatId, input })
+        // ── Milestone 1: Agent-level INPUT validation (LLM-as-judge) ──────────
+        if (validationEnabled && validationModel && inputValidationCriteria) {
+            const inputCheck = await validateWithLLM(input, inputValidationCriteria, validationModel)
+            appendAgentAuditEntry({
+                sessionId: this.sessionId,
+                chatId,
+                type: 'agent_input_validation',
+                content: input,
+                validation: inputCheck,
+                criteria: inputValidationCriteria
+            })
+            if (!inputCheck.valid) {
+                const msg = `[INPUT VALIDATION FAILED] ${inputCheck.reason}`
+                if (shouldStreamResponse) streamResponse(sseStreamer, chatId, msg)
+                return formatResponse(msg)
+            }
+        }
+
+        const executor = await prepareAgent(nodeData, options, {
+            sessionId: this.sessionId,
+            chatId: options.chatId,
+            input,
+            judgeModel: validationEnabled && validationModel ? validationModel : undefined
+        })
 
         const loggerHandler = new ConsoleCallbackHandler(options.logger)
         const callbacks = await additionalCallbacks(nodeData, options)
@@ -221,6 +291,22 @@ class ToolAgent_Agents implements INode {
         output = extractOutputFromArray(res?.output)
         output = removeInvalidImageMarkdown(output)
 
+        // ── Milestone 1: Agent-level OUTPUT validation (LLM-as-judge) ─────────
+        if (validationEnabled && validationModel && outputValidationCriteria) {
+            const outputCheck = await validateWithLLM(output, outputValidationCriteria, validationModel)
+            appendAgentAuditEntry({
+                sessionId: this.sessionId,
+                chatId,
+                type: 'agent_output_validation',
+                content: output,
+                validation: outputCheck,
+                criteria: outputValidationCriteria
+            })
+            if (!outputCheck.valid) {
+                output += `\n\n[OUTPUT VALIDATION WARNING] ${outputCheck.reason}`
+            }
+        }
+
         // Claude 3 Opus tends to spit out <thinking>..</thinking> as well, discard that in final output
         // https://docs.anthropic.com/en/docs/build-with-claude/tool-use#chain-of-thought
         const regexPattern: RegExp = /<thinking>[\s\S]*?<\/thinking>/
@@ -268,7 +354,7 @@ class ToolAgent_Agents implements INode {
 const prepareAgent = async (
     nodeData: INodeData,
     options: ICommonObject,
-    flowObj: { sessionId?: string; chatId?: string; input?: string }
+    flowObj: { sessionId?: string; chatId?: string; input?: string; judgeModel?: BaseChatModel }
 ) => {
     const model = nodeData.inputs?.model as BaseChatModel
     const maxIterations = nodeData.inputs?.maxIterations as string
@@ -371,7 +457,8 @@ const prepareAgent = async (
         chatId: flowObj?.chatId,
         input: flowObj?.input,
         verbose: process.env.DEBUG === 'true',
-        maxIterations: maxIterations ? parseFloat(maxIterations) : undefined
+        maxIterations: maxIterations ? parseFloat(maxIterations) : undefined,
+        judgeModel: flowObj?.judgeModel
     })
 
     return executor

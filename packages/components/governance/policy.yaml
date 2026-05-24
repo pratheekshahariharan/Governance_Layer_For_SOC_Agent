@@ -1,0 +1,82 @@
+# Cybersecurity Incident Response – Governance Policy
+# Actions: allow | block | escalate
+# match_tool supports exact names and wildcard prefix/suffix via *
+
+rules:
+    # ── BLOCK: Irreversible destructive actions ──────────────────────────────
+    - id: block-wipe-device
+      tool: wipeDevice
+      action: block
+      reason: 'Irreversible data destruction is not permitted by automated agents. Raise a change-control ticket.'
+
+    - id: block-format-disk
+      tool: formatDisk
+      action: block
+      reason: 'Disk formatting is irreversible and requires a change-control ticket outside this system.'
+
+    - id: block-delete-logs
+      tool: deleteLogs
+      action: block
+      reason: 'Deleting security logs destroys the audit trail required for forensic investigation.'
+
+    # ── ESCALATE: Actions with significant operational or security impact ─────
+    - id: escalate-isolate-host
+      tool: isolateHost
+      action: escalate
+      reason: 'Host isolation cuts business operations. Requires SOC lead approval before execution.'
+
+    - id: escalate-block-ip
+      tool: blockIP
+      action: escalate
+      reason: 'Firewall rule changes can lock out legitimate users. Requires analyst confirmation.'
+
+    - id: escalate-reset-credentials
+      tool: resetCredentials
+      action: escalate
+      reason: 'Credential reset locks the affected account immediately. Requires analyst confirmation.'
+
+    - id: escalate-notify-soc
+      tool: notifySOCTeam
+      action: escalate
+      reason: 'External SOC notifications must be reviewed before sending to prevent alert fatigue.'
+
+    - id: escalate-execute-patch
+      tool: executePatch
+      action: escalate
+      reason: 'Applying patches to production systems requires change management approval.'
+
+    - id: escalate-quarantine-file
+      tool: quarantineFile
+      action: escalate
+      reason: 'File quarantine may break running services. Requires analyst sign-off.'
+
+    # ── ALLOW: Safe read-only / low-risk actions ─────────────────────────────
+    - id: allow-threat-lookup
+      tool: lookupThreatIntel
+      action: allow
+      reason: 'Read-only threat intelligence lookup. No system changes.'
+
+    - id: allow-scan-network
+      tool: scanNetwork
+      action: allow
+      reason: 'Passive network scan. No changes to systems or configurations.'
+
+    - id: allow-forensic-scan
+      tool: runForensicScan
+      action: allow
+      reason: 'Read-only forensic analysis of host artifacts.'
+
+    - id: allow-create-ticket
+      tool: createIncidentTicket
+      action: allow
+      reason: 'Creating an incident ticket is a low-risk documentation action.'
+
+    - id: allow-generate-report
+      tool: generateReport
+      action: allow
+      reason: 'Report generation is read-only and produces no system changes.'
+
+    - id: allow-check-vulnerability
+      tool: checkVulnerability
+      action: allow
+      reason: 'CVE/vulnerability lookup is read-only.'

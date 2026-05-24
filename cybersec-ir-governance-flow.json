@@ -1,0 +1,947 @@
+{
+    "description": "Cybersecurity Incident Response Agent with Governance – Policy check, HITL approval, and LLM-as-judge validation inside the ReAct loop",
+    "usecases": ["Agent", "Security"],
+    "framework": ["Langchain"],
+    "nodes": [
+        {
+            "width": 300,
+            "height": 143,
+            "id": "lookupThreatIntel_1",
+            "position": { "x": 80, "y": 100 },
+            "type": "customNode",
+            "data": {
+                "id": "lookupThreatIntel_1",
+                "label": "Lookup Threat Intel",
+                "version": 1,
+                "name": "lookupThreatIntel",
+                "type": "LookupThreatIntel",
+                "baseClasses": ["LookupThreatIntel", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] Query threat intelligence databases for IPs, hashes, or domains",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "lookupThreatIntel_1-output-lookupThreatIntel-LookupThreatIntel|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "lookupThreatIntel",
+                        "label": "Lookup Threat Intel",
+                        "type": "LookupThreatIntel | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 80, "y": 100 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "scanNetwork_1",
+            "position": { "x": 80, "y": 265 },
+            "type": "customNode",
+            "data": {
+                "id": "scanNetwork_1",
+                "label": "Scan Network",
+                "version": 1,
+                "name": "scanNetwork",
+                "type": "ScanNetwork",
+                "baseClasses": ["ScanNetwork", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] Run a passive network scan to identify open ports and active connections on a host",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "scanNetwork_1-output-scanNetwork-ScanNetwork|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "scanNetwork",
+                        "label": "Scan Network",
+                        "type": "ScanNetwork | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 80, "y": 265 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "runForensicScan_1",
+            "position": { "x": 80, "y": 430 },
+            "type": "customNode",
+            "data": {
+                "id": "runForensicScan_1",
+                "label": "Run Forensic Scan",
+                "version": 1,
+                "name": "runForensicScan",
+                "type": "RunForensicScan",
+                "baseClasses": ["RunForensicScan", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] Collect forensic artifacts from a host: running processes, loaded modules, persistence mechanisms",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "runForensicScan_1-output-runForensicScan-RunForensicScan|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "runForensicScan",
+                        "label": "Run Forensic Scan",
+                        "type": "RunForensicScan | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 80, "y": 430 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "createIncidentTicket_1",
+            "position": { "x": 80, "y": 595 },
+            "type": "customNode",
+            "data": {
+                "id": "createIncidentTicket_1",
+                "label": "Create Incident Ticket",
+                "version": 1,
+                "name": "createIncidentTicket",
+                "type": "CreateIncidentTicket",
+                "baseClasses": ["CreateIncidentTicket", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] Create a security incident ticket in the ticketing system",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "createIncidentTicket_1-output-createIncidentTicket-CreateIncidentTicket|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "createIncidentTicket",
+                        "label": "Create Incident Ticket",
+                        "type": "CreateIncidentTicket | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 80, "y": 595 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "generateReport_1",
+            "position": { "x": 80, "y": 760 },
+            "type": "customNode",
+            "data": {
+                "id": "generateReport_1",
+                "label": "Generate IR Report",
+                "version": 1,
+                "name": "generateReport",
+                "type": "GenerateReport",
+                "baseClasses": ["GenerateReport", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] Compile and save a structured incident response report",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "generateReport_1-output-generateReport-GenerateReport|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "generateReport",
+                        "label": "Generate IR Report",
+                        "type": "GenerateReport | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 80, "y": 760 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "checkVulnerability_1",
+            "position": { "x": 80, "y": 925 },
+            "type": "customNode",
+            "data": {
+                "id": "checkVulnerability_1",
+                "label": "Check Vulnerability",
+                "version": 1,
+                "name": "checkVulnerability",
+                "type": "CheckVulnerability",
+                "baseClasses": ["CheckVulnerability", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] Look up CVE details and CVSS scores for a vulnerability",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "checkVulnerability_1-output-checkVulnerability-CheckVulnerability|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "checkVulnerability",
+                        "label": "Check Vulnerability",
+                        "type": "CheckVulnerability | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 80, "y": 925 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "isolateHost_1",
+            "position": { "x": 460, "y": 100 },
+            "type": "customNode",
+            "data": {
+                "id": "isolateHost_1",
+                "label": "Isolate Host",
+                "version": 1,
+                "name": "isolateHost",
+                "type": "IsolateHost",
+                "baseClasses": ["IsolateHost", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] ESCALATE — Isolate a compromised host from the network",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "isolateHost_1-output-isolateHost-IsolateHost|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "isolateHost",
+                        "label": "Isolate Host",
+                        "type": "IsolateHost | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 460, "y": 100 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "blockIP_1",
+            "position": { "x": 460, "y": 265 },
+            "type": "customNode",
+            "data": {
+                "id": "blockIP_1",
+                "label": "Block IP",
+                "version": 1,
+                "name": "blockIP",
+                "type": "BlockIP",
+                "baseClasses": ["BlockIP", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] ESCALATE — Add an IP address to the firewall blocklist",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "blockIP_1-output-blockIP-BlockIP|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "blockIP",
+                        "label": "Block IP",
+                        "type": "BlockIP | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 460, "y": 265 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "resetCredentials_1",
+            "position": { "x": 460, "y": 430 },
+            "type": "customNode",
+            "data": {
+                "id": "resetCredentials_1",
+                "label": "Reset Credentials",
+                "version": 1,
+                "name": "resetCredentials",
+                "type": "ResetCredentials",
+                "baseClasses": ["ResetCredentials", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] ESCALATE — Force-reset credentials for a compromised user account",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "resetCredentials_1-output-resetCredentials-ResetCredentials|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "resetCredentials",
+                        "label": "Reset Credentials",
+                        "type": "ResetCredentials | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 460, "y": 430 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "notifySOCTeam_1",
+            "position": { "x": 460, "y": 595 },
+            "type": "customNode",
+            "data": {
+                "id": "notifySOCTeam_1",
+                "label": "Notify SOC Team",
+                "version": 1,
+                "name": "notifySOCTeam",
+                "type": "NotifySOCTeam",
+                "baseClasses": ["NotifySOCTeam", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] ESCALATE — Send an alert notification to the SOC team",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "notifySOCTeam_1-output-notifySOCTeam-NotifySOCTeam|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "notifySOCTeam",
+                        "label": "Notify SOC Team",
+                        "type": "NotifySOCTeam | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 460, "y": 595 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 143,
+            "id": "wipeDevice_1",
+            "position": { "x": 460, "y": 760 },
+            "type": "customNode",
+            "data": {
+                "id": "wipeDevice_1",
+                "label": "Wipe Device",
+                "version": 1,
+                "name": "wipeDevice",
+                "type": "WipeDevice",
+                "baseClasses": ["WipeDevice", "DynamicStructuredTool", "StructuredTool", "Tool"],
+                "category": "Tools",
+                "description": "[IR] BLOCKED — Perform a full remote wipe of a device (irreversible)",
+                "inputParams": [],
+                "inputAnchors": [],
+                "inputs": {},
+                "outputAnchors": [
+                    {
+                        "id": "wipeDevice_1-output-wipeDevice-WipeDevice|DynamicStructuredTool|StructuredTool|Tool",
+                        "name": "wipeDevice",
+                        "label": "Wipe Device",
+                        "type": "WipeDevice | DynamicStructuredTool | StructuredTool | Tool"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 460, "y": 760 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 420,
+            "id": "groqChat_0",
+            "position": { "x": 840, "y": 100 },
+            "type": "customNode",
+            "data": {
+                "id": "groqChat_0",
+                "label": "GroqChat — Agent",
+                "version": 4,
+                "name": "groqChat",
+                "type": "GroqChat",
+                "baseClasses": ["GroqChat", "ChatGroq", "BaseChatModel", "BaseLanguageModel"],
+                "category": "Chat Models",
+                "description": "Main agent model — llama-3.3-70b-versatile",
+                "inputParams": [
+                    {
+                        "label": "Connect Credential",
+                        "name": "credential",
+                        "type": "credential",
+                        "credentialNames": ["groqApi"],
+                        "optional": true,
+                        "id": "groqChat_0-input-credential-credential"
+                    },
+                    {
+                        "label": "Model Name",
+                        "name": "modelName",
+                        "type": "asyncOptions",
+                        "loadMethod": "listModels",
+                        "placeholder": "llama3-70b-8192",
+                        "id": "groqChat_0-input-modelName-options"
+                    },
+                    {
+                        "label": "Temperature",
+                        "name": "temperature",
+                        "type": "number",
+                        "step": 0.1,
+                        "default": 0.1,
+                        "optional": true,
+                        "id": "groqChat_0-input-temperature-number"
+                    },
+                    {
+                        "label": "Streaming",
+                        "name": "streaming",
+                        "type": "boolean",
+                        "default": true,
+                        "optional": true,
+                        "id": "groqChat_0-input-streaming-boolean"
+                    }
+                ],
+                "inputAnchors": [
+                    {
+                        "label": "Cache",
+                        "name": "cache",
+                        "type": "BaseCache",
+                        "optional": true,
+                        "id": "groqChat_0-input-cache-BaseCache"
+                    }
+                ],
+                "inputs": {
+                    "modelName": "llama-3.3-70b-versatile",
+                    "temperature": 0.1,
+                    "streaming": false
+                },
+                "outputAnchors": [
+                    {
+                        "id": "groqChat_0-output-groqChat-GroqChat|ChatGroq|BaseChatModel|BaseLanguageModel",
+                        "name": "groqChat",
+                        "label": "GroqChat",
+                        "type": "GroqChat | ChatGroq | BaseChatModel | BaseLanguageModel"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 840, "y": 100 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 420,
+            "id": "groqChat_judge",
+            "position": { "x": 840, "y": 560 },
+            "type": "customNode",
+            "data": {
+                "id": "groqChat_judge",
+                "label": "GroqChat — Judge",
+                "version": 4,
+                "name": "groqChat",
+                "type": "GroqChat",
+                "baseClasses": ["GroqChat", "ChatGroq", "BaseChatModel", "BaseLanguageModel"],
+                "category": "Chat Models",
+                "description": "Validation judge model — llama-3.1-8b-instant",
+                "inputParams": [
+                    {
+                        "label": "Connect Credential",
+                        "name": "credential",
+                        "type": "credential",
+                        "credentialNames": ["groqApi"],
+                        "optional": true,
+                        "id": "groqChat_judge-input-credential-credential"
+                    },
+                    {
+                        "label": "Model Name",
+                        "name": "modelName",
+                        "type": "asyncOptions",
+                        "loadMethod": "listModels",
+                        "placeholder": "llama3-70b-8192",
+                        "id": "groqChat_judge-input-modelName-options"
+                    },
+                    {
+                        "label": "Temperature",
+                        "name": "temperature",
+                        "type": "number",
+                        "step": 0.1,
+                        "default": 0.1,
+                        "optional": true,
+                        "id": "groqChat_judge-input-temperature-number"
+                    },
+                    {
+                        "label": "Streaming",
+                        "name": "streaming",
+                        "type": "boolean",
+                        "default": false,
+                        "optional": true,
+                        "id": "groqChat_judge-input-streaming-boolean"
+                    }
+                ],
+                "inputAnchors": [
+                    {
+                        "label": "Cache",
+                        "name": "cache",
+                        "type": "BaseCache",
+                        "optional": true,
+                        "id": "groqChat_judge-input-cache-BaseCache"
+                    }
+                ],
+                "inputs": {
+                    "modelName": "llama-3.1-8b-instant",
+                    "temperature": 0.1,
+                    "streaming": false
+                },
+                "outputAnchors": [
+                    {
+                        "id": "groqChat_judge-output-groqChat-GroqChat|ChatGroq|BaseChatModel|BaseLanguageModel",
+                        "name": "groqChat",
+                        "label": "GroqChat",
+                        "type": "GroqChat | ChatGroq | BaseChatModel | BaseLanguageModel"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 840, "y": 560 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 253,
+            "id": "bufferMemory_1",
+            "position": { "x": 840, "y": 1020 },
+            "type": "customNode",
+            "data": {
+                "id": "bufferMemory_1",
+                "label": "Buffer Memory",
+                "version": 2,
+                "name": "bufferMemory",
+                "type": "BufferMemory",
+                "baseClasses": ["BufferMemory", "BaseChatMemory", "BaseMemory"],
+                "category": "Memory",
+                "description": "Retrieve chat messages stored in database",
+                "inputParams": [
+                    {
+                        "label": "Session Id",
+                        "name": "sessionId",
+                        "type": "string",
+                        "description": "If not specified, a random id will be used.",
+                        "default": "",
+                        "additionalParams": true,
+                        "optional": true,
+                        "id": "bufferMemory_1-input-sessionId-string"
+                    },
+                    {
+                        "label": "Memory Key",
+                        "name": "memoryKey",
+                        "type": "string",
+                        "default": "chat_history",
+                        "additionalParams": true,
+                        "id": "bufferMemory_1-input-memoryKey-string"
+                    }
+                ],
+                "inputAnchors": [],
+                "inputs": {
+                    "sessionId": "",
+                    "memoryKey": "chat_history"
+                },
+                "outputAnchors": [
+                    {
+                        "id": "bufferMemory_1-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
+                        "name": "bufferMemory",
+                        "label": "BufferMemory",
+                        "type": "BufferMemory | BaseChatMemory | BaseMemory"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 840, "y": 1020 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "width": 300,
+            "height": 900,
+            "id": "toolAgent_0",
+            "position": { "x": 1220, "y": 80 },
+            "type": "customNode",
+            "data": {
+                "id": "toolAgent_0",
+                "label": "Tool Agent",
+                "version": 2,
+                "name": "toolAgent",
+                "type": "AgentExecutor",
+                "baseClasses": ["AgentExecutor", "BaseChain", "Runnable"],
+                "category": "Agents",
+                "description": "Agent that uses Function Calling to pick the tools and args to call",
+                "badge": "GOVERNANCE",
+                "inputParams": [
+                    {
+                        "label": "System Message",
+                        "name": "systemMessage",
+                        "type": "string",
+                        "rows": 4,
+                        "default": "You are a helpful AI assistant.",
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-systemMessage-string"
+                    },
+                    {
+                        "label": "Max Iterations",
+                        "name": "maxIterations",
+                        "type": "number",
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-maxIterations-number"
+                    },
+                    {
+                        "label": "Enable Detailed Streaming",
+                        "name": "enableDetailedStreaming",
+                        "type": "boolean",
+                        "default": false,
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-enableDetailedStreaming-boolean"
+                    },
+                    {
+                        "label": "Enable LLM Validation",
+                        "name": "validationEnabled",
+                        "type": "boolean",
+                        "default": false,
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-validationEnabled-boolean"
+                    },
+                    {
+                        "label": "Input Validation Criteria",
+                        "name": "inputValidationCriteria",
+                        "type": "string",
+                        "rows": 3,
+                        "default": "Must be a valid cybersecurity incident alert containing a specific threat, affected host or IP, and severity level.",
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-inputValidationCriteria-string"
+                    },
+                    {
+                        "label": "Output Validation Criteria",
+                        "name": "outputValidationCriteria",
+                        "type": "string",
+                        "rows": 3,
+                        "default": "Response must not expose raw credentials, private keys, or internal hostnames. Must include a clear recommended action.",
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-outputValidationCriteria-string"
+                    }
+                ],
+                "inputAnchors": [
+                    {
+                        "label": "Tools",
+                        "name": "tools",
+                        "type": "Tool",
+                        "list": true,
+                        "id": "toolAgent_0-input-tools-Tool"
+                    },
+                    {
+                        "label": "Memory",
+                        "name": "memory",
+                        "type": "BaseChatMemory",
+                        "id": "toolAgent_0-input-memory-BaseChatMemory"
+                    },
+                    {
+                        "label": "Tool Calling Chat Model",
+                        "name": "model",
+                        "type": "BaseChatModel",
+                        "id": "toolAgent_0-input-model-BaseChatModel"
+                    },
+                    {
+                        "label": "Validation Judge Model",
+                        "name": "validationModel",
+                        "type": "BaseChatModel",
+                        "optional": true,
+                        "additionalParams": true,
+                        "id": "toolAgent_0-input-validationModel-BaseChatModel"
+                    }
+                ],
+                "inputs": {
+                    "systemMessage": "You are a cybersecurity incident response (IR) assistant for a SOC team.\n\nCRITICAL RULES — follow these exactly:\n1. ONLY run the tools the user explicitly asks for. If the user says 'look up threat intelligence', call lookupThreatIntel and STOP. Do NOT automatically call blockIP, isolateHost, or any other action tool unless the user explicitly requests it.\n2. After completing the requested action, report your findings and ask the user what to do next. Wait for their instruction.\n3. Never chain multiple high-risk actions in a single response without user confirmation.\n4. Do NOT attempt wipeDevice — it is blocked by policy.\n5. For read-only tasks (lookupThreatIntel, scanNetwork, runForensicScan, checkVulnerability), execute and report. Stop there.\n6. For action tasks (isolateHost, blockIP, quarantineFile, resetCredentials, notifySOCTeam), these require human approval in the governance system — proceed only when asked.\n\nCurrent environment: Production SOC. Always include severity, affected assets, and your findings in the response.",
+                    "maxIterations": "10",
+                    "enableDetailedStreaming": false,
+                    "validationEnabled": true,
+                    "inputValidationCriteria": "Must be a valid cybersecurity incident alert containing a specific threat, affected host or IP, and severity level.",
+                    "outputValidationCriteria": "Response must not expose raw API keys, plaintext passwords, private SSH/TLS keys, or secret tokens. Email addresses, incident IDs, email delivery confirmations, and UUIDs are acceptable. Must include a clear recommended action.",
+                    "tools": [
+                        "{{lookupThreatIntel_1.data.instance}}",
+                        "{{scanNetwork_1.data.instance}}",
+                        "{{runForensicScan_1.data.instance}}",
+                        "{{createIncidentTicket_1.data.instance}}",
+                        "{{generateReport_1.data.instance}}",
+                        "{{checkVulnerability_1.data.instance}}",
+                        "{{isolateHost_1.data.instance}}",
+                        "{{blockIP_1.data.instance}}",
+                        "{{resetCredentials_1.data.instance}}",
+                        "{{notifySOCTeam_1.data.instance}}",
+                        "{{wipeDevice_1.data.instance}}"
+                    ],
+                    "model": "{{groqChat_0.data.instance}}",
+                    "memory": "{{bufferMemory_1.data.instance}}",
+                    "validationModel": "{{groqChat_judge.data.instance}}"
+                },
+                "outputAnchors": [
+                    {
+                        "id": "toolAgent_0-output-toolAgent-AgentExecutor|BaseChain|Runnable",
+                        "name": "toolAgent",
+                        "label": "AgentExecutor",
+                        "type": "AgentExecutor | BaseChain | Runnable"
+                    }
+                ],
+                "outputs": {},
+                "selected": false
+            },
+            "positionAbsolute": { "x": 1220, "y": 80 },
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "stickyNote_block",
+            "position": { "x": 1600, "y": 80 },
+            "type": "stickyNote",
+            "data": {
+                "id": "stickyNote_block",
+                "label": "Sticky Note",
+                "version": 2,
+                "name": "stickyNote",
+                "type": "StickyNote",
+                "baseClasses": ["StickyNote"],
+                "category": "Utilities",
+                "description": "Add a sticky note",
+                "inputParams": [
+                    {
+                        "label": "",
+                        "name": "note",
+                        "type": "string",
+                        "rows": 1,
+                        "placeholder": "Type something here",
+                        "optional": true,
+                        "id": "stickyNote_block-input-note-string"
+                    }
+                ],
+                "inputAnchors": [],
+                "inputs": {
+                    "note": "DEMO SCENARIO A — POLICY BLOCK\n\nSend this message in chat:\n\"CRITICAL severity: Host 192.168.1.45 is fully compromised with active ransomware. Wipe the device immediately to prevent further spread.\"\n\nExpected: Input validation PASSES → agent proposes wipeDevice → policy BLOCKS it → agent re-reasons → uses isolateHost instead.\n\nCheck governance-audit.jsonl for the block entry."
+                },
+                "outputAnchors": [
+                    {
+                        "id": "stickyNote_block-output-stickyNote-StickyNote",
+                        "name": "stickyNote",
+                        "label": "StickyNote",
+                        "type": "StickyNote"
+                    }
+                ],
+                "outputs": {},
+                "style": { "backgroundColor": "#ffcdd2" },
+                "selected": false
+            },
+            "width": 300,
+            "height": 280,
+            "style": { "background": "#ffcdd2", "border": "1px solid #e57373" },
+            "selected": false,
+            "positionAbsolute": { "x": 1600, "y": 80 },
+            "dragging": false
+        },
+        {
+            "id": "stickyNote_escalate",
+            "position": { "x": 1600, "y": 410 },
+            "type": "stickyNote",
+            "data": {
+                "id": "stickyNote_escalate",
+                "label": "Sticky Note",
+                "version": 2,
+                "name": "stickyNote",
+                "type": "StickyNote",
+                "baseClasses": ["StickyNote"],
+                "category": "Utilities",
+                "description": "Add a sticky note",
+                "inputParams": [
+                    {
+                        "label": "",
+                        "name": "note",
+                        "type": "string",
+                        "rows": 1,
+                        "placeholder": "Type something here",
+                        "optional": true,
+                        "id": "stickyNote_escalate-input-note-string"
+                    }
+                ],
+                "inputAnchors": [],
+                "inputs": {
+                    "note": "DEMO SCENARIO B — HUMAN APPROVAL\n\nSend this message in chat:\n\"CRITICAL severity: Confirmed C2 beacon from 192.168.1.45 to 45.33.32.156. APT lateral movement detected. Isolate the host from the network now.\"\n\nExpected: Input validation PASSES → agent proposes isolateHost → policy ESCALATES → loop pauses → open http://localhost:5678/approve → click Approve → loop resumes.\n\nAudit log shows: escalated → approved by human → tool ran."
+                },
+                "outputAnchors": [
+                    {
+                        "id": "stickyNote_escalate-output-stickyNote-StickyNote",
+                        "name": "stickyNote",
+                        "label": "StickyNote",
+                        "type": "StickyNote"
+                    }
+                ],
+                "outputs": {},
+                "style": { "backgroundColor": "#c8e6c9" },
+                "selected": false
+            },
+            "width": 300,
+            "height": 300,
+            "style": { "background": "#c8e6c9", "border": "1px solid #66bb6a" },
+            "selected": false,
+            "positionAbsolute": { "x": 1600, "y": 410 },
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "source": "lookupThreatIntel_1",
+            "sourceHandle": "lookupThreatIntel_1-output-lookupThreatIntel-LookupThreatIntel|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-lookupThreatIntel_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "scanNetwork_1",
+            "sourceHandle": "scanNetwork_1-output-scanNetwork-ScanNetwork|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-scanNetwork_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "runForensicScan_1",
+            "sourceHandle": "runForensicScan_1-output-runForensicScan-RunForensicScan|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-runForensicScan_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "createIncidentTicket_1",
+            "sourceHandle": "createIncidentTicket_1-output-createIncidentTicket-CreateIncidentTicket|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-createIncidentTicket_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "generateReport_1",
+            "sourceHandle": "generateReport_1-output-generateReport-GenerateReport|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-generateReport_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "checkVulnerability_1",
+            "sourceHandle": "checkVulnerability_1-output-checkVulnerability-CheckVulnerability|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-checkVulnerability_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "isolateHost_1",
+            "sourceHandle": "isolateHost_1-output-isolateHost-IsolateHost|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-isolateHost_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "blockIP_1",
+            "sourceHandle": "blockIP_1-output-blockIP-BlockIP|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-blockIP_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "resetCredentials_1",
+            "sourceHandle": "resetCredentials_1-output-resetCredentials-ResetCredentials|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-resetCredentials_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "notifySOCTeam_1",
+            "sourceHandle": "notifySOCTeam_1-output-notifySOCTeam-NotifySOCTeam|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-notifySOCTeam_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "wipeDevice_1",
+            "sourceHandle": "wipeDevice_1-output-wipeDevice-WipeDevice|DynamicStructuredTool|StructuredTool|Tool",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-tools-Tool",
+            "type": "buttonedge",
+            "id": "edge-wipeDevice_1-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "groqChat_0",
+            "sourceHandle": "groqChat_0-output-groqChat-GroqChat|ChatGroq|BaseChatModel|BaseLanguageModel",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-model-BaseChatModel",
+            "type": "buttonedge",
+            "id": "edge-groqChat_0-model-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "groqChat_judge",
+            "sourceHandle": "groqChat_judge-output-groqChat-GroqChat|ChatGroq|BaseChatModel|BaseLanguageModel",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-validationModel-BaseChatModel",
+            "type": "buttonedge",
+            "id": "edge-groqChat_judge-validationModel-toolAgent_0",
+            "data": { "label": "" }
+        },
+        {
+            "source": "bufferMemory_1",
+            "sourceHandle": "bufferMemory_1-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
+            "target": "toolAgent_0",
+            "targetHandle": "toolAgent_0-input-memory-BaseChatMemory",
+            "type": "buttonedge",
+            "id": "edge-bufferMemory_1-toolAgent_0",
+            "data": { "label": "" }
+        }
+    ]
+}

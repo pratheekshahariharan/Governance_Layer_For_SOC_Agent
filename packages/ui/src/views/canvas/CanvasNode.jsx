@@ -17,7 +17,7 @@ import NodeInfoDialog from '@/ui-component/dialog/NodeInfoDialog'
 
 // const
 import { baseURL } from '@/store/constant'
-import { IconTrash, IconCopy, IconInfoCircle, IconAlertTriangle } from '@tabler/icons-react'
+import { IconTrash, IconCopy, IconInfoCircle, IconAlertTriangle, IconShieldCheck } from '@tabler/icons-react'
 import { flowContext } from '@/store/context/ReactFlowContext'
 import LlamaindexPNG from '@/assets/images/llamaindex.png'
 
@@ -33,6 +33,7 @@ const CanvasNode = ({ data }) => {
     const [showInfoDialog, setShowInfoDialog] = useState(false)
     const [infoDialogProps, setInfoDialogProps] = useState({})
     const [warningMessage, setWarningMessage] = useState('')
+    const [isGovernanceEnabled, setIsGovernanceEnabled] = useState(false)
     const [open, setOpen] = useState(false)
     const [isForceCloseNodeInfo, setIsForceCloseNodeInfo] = useState(null)
 
@@ -85,8 +86,12 @@ const CanvasNode = ({ data }) => {
             } else {
                 setWarningMessage('')
             }
+            // Show governance shield when badge is GOVERNANCE or validationEnabled input is true
+            const govEnabled =
+                componentNode.badge === 'GOVERNANCE' || data.inputs?.validationEnabled === true || data.inputs?.validationEnabled === 'true'
+            setIsGovernanceEnabled(govEnabled)
         }
-    }, [canvas.componentNodes, data.name, data.version])
+    }, [canvas.componentNodes, data.name, data.version, data.inputs?.validationEnabled])
 
     return (
         <>
@@ -178,6 +183,13 @@ const CanvasNode = ({ data }) => {
                                     {data.label}
                                 </Typography>
                             </Box>
+                            {isGovernanceEnabled && (
+                                <Tooltip title='Validation & Governance Enabled' placement='top'>
+                                    <IconButton sx={{ height: 28, width: 28, ml: 0.5, p: 0 }}>
+                                        <IconShieldCheck size={22} color='#4caf50' />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                             <div style={{ flexGrow: 1 }}></div>
                             {data.tags && data.tags.includes('LlamaIndex') && (
                                 <>
