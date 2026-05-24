@@ -26,6 +26,7 @@ think → propose action → [LLM INPUT VALIDATION]
 ---
 
 ## Demo Scenario — Cybersecurity Incident Response
+https://drive.google.com/file/d/1aa_ibiv0YlXBj3YMiDCxTGpFJBxA-A8c/view?usp=drivesdk<img width="1920" height="1080" alt="Screenshot (1413)" src="https://github.com/user-attachments/assets/cae35c1c-08d5-4567-82b9-6dcd324d38a7" />
 
 The prototype is built around a **Cybersecurity IR Agent** that responds to live incidents. It demonstrates all three governance outcomes in a single realistic scenario:
 
