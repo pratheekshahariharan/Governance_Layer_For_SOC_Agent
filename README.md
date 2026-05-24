@@ -1,4 +1,4 @@
-# Governance-First Agent Node for Flowise
+# Governance Layer For Cybersecurity-SOC Agent in Flowise
 
 **Hackathon:** From ReAct to Governance-First — Reimagining the Agent Node in Visual Agent Builders  
 **Track:** Agentic AI · Trust, Safety & Governance · Developer Tooling  
